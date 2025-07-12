@@ -3,8 +3,8 @@ import scan
 import time
 from datetime import datetime, timedelta
 
-daysInGraph = 730
-weeksInGraph = 105
+daysInGraph = 183
+weeksInGraph = 26
 outOfRange = 99999
 
 def stats(email: str):
@@ -55,8 +55,8 @@ def countDaysSinceDate(date: time.struct_time) ->int:
 def calcOffset() ->int:
     weekDay = time.localtime().tm_wday
     if weekDay == 6:
-        return 7
-    return 6 - weekDay
+        return 6
+    return 5 - weekDay
    
 
 def printCommitsStats(commits: dict[int, int]):
@@ -97,8 +97,7 @@ def printCells(cols: dict[int, list[int]]):
             
             if cols.get(i) != None:
                 col = cols[i]
-                if i == 0 and j == (calcOffset() - 1):
-
+                if i == 0 and j == calcOffset():
                     printCell(col[j], True)
                     continue
                 else:
@@ -157,11 +156,11 @@ def monthToString(month: int)-> str:
 def printDayCol(day: int):
     out = "     "
     if day == 1:
-        out = " Mon "
+        out = " Fri "
     if day == 3:
         out = " Wed "
     if day == 5:
-        out = " Fri "
+        out = " Mon "
     
     print(out, end="")
 

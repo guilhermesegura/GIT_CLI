@@ -62,8 +62,28 @@ def joinLists(new: list[str], existing: list[str])-> list[str]:
             existing.append(entry)
     return existing
 
-def dumpStringsListToFile(repos: str, filePath: str):
+def dumpStringsListToFile(repos: list[str], filePath: str):
     content = "\n".join(repos)
     with open(filePath, "w") as f:
         f.write(content)
-    
+
+def printRepos(repos: list[str]):
+    print("\n List of Repositories that are being used: \n")
+    for i, n in enumerate(repos):
+        print(f"\t{i + 1} - {n}")
+    print()
+
+def listFolders():
+    filePath = getDotFilePath()
+    repos = parseFileLinesToLists(filePath)
+    printRepos(repos)
+
+def RemoveFolder(repo: str):
+    filepath = getDotFilePath()
+    repos = parseFileLinesToLists(filepath)
+    if repo in repos:
+        repos.remove(repo)
+        dumpStringsListToFile(repos, filepath)
+        print(f"\n{repo} Succesfuly removed\n")
+    else:
+        print(f"\n{repo} is not in the list of repositories")
