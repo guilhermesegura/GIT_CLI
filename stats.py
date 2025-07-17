@@ -6,8 +6,16 @@ from datetime import datetime, timedelta
 daysInGraph = 183
 weeksInGraph = 26
 outOfRange = 99999
+today = datetime.today()
 
 def stats(email: str):
+    commits = processRepositories(email)
+    printCommitsStats(commits)
+
+def statsDate(email: str, date: str):
+    global today
+    day, month, year = date.split("/")
+    today = datetime(int(year), int(month), int(day))
     commits = processRepositories(email)
     printCommitsStats(commits)
 
@@ -42,10 +50,10 @@ def fillCommits(email: str, path: str, commits: dict[int, int]):
 def countDaysSinceDate(date: time.struct_time) ->int:
     days = 0
     date = datetime(date.tm_year, date.tm_mon, date.tm_mday)
-    today = datetime.today()
-    today = datetime(today.year, today.month, today.day)
+    today_aux = datetime(today.year, today.month, today.day)
     oneDay = timedelta(days = 1)
-    while date < today:
+    if date > today: return outOfRange
+    while date < today_aux:
         date += oneDay
         days +=1
         if days > daysInGraph:
@@ -53,7 +61,7 @@ def countDaysSinceDate(date: time.struct_time) ->int:
     return days
 
 def calcOffset() ->int:
-    weekDay = time.localtime().tm_wday
+    weekDay = today.weekday()
     if weekDay == 6:
         return 6
     return 5 - weekDay
@@ -111,7 +119,7 @@ def printCells(cols: dict[int, list[int]]):
 
 
 def printMonths():
-    week = datetime.today() - timedelta(days = daysInGraph)
+    week = today - timedelta(days = daysInGraph)
     month = week.month
     oneWeek = timedelta(days = 7)
     print("          ",end="")
@@ -123,7 +131,7 @@ def printMonths():
             print("    ",end="")
 
         week += oneWeek
-        if week > datetime.today():
+        if week > today:
             break
     print()
 
@@ -164,7 +172,7 @@ def printDayCol(day: int):
     
     print(out, end="")
 
-def printCell(val: int, today: bool):
+def printCell(val: int, istoday: bool):
     escape = "\033[0;37;30m"
     if val > 0 and val < 5:
         escape = "\033[1;30;47m"
@@ -173,7 +181,7 @@ def printCell(val: int, today: bool):
     if val >= 10:
         escape = "\033[1;30;42m"
     
-    if today:
+    if istoday:
         escape = "\033[1;37;45m"
 
 
